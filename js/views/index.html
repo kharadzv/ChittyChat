@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChittyChat</title>
+</head>
+<body>
+  <h1 id="greeting"></h1>
+  <p>We are currently in the learning process. Please visit us later. Thank you!</p>
+  <form id="nameForm">
+    <label for="name">Enter your name: </label>
+    <input type="text" id="name" name="name" required />
+    <button type="submit">Submit</button>
+  </form>
+  <p id="welcomeMessage"></p>
+
+  <script>
+    // Get the current time and display a greeting
+    const now = new Date();
+    const hours = now.getHours();
+    let greeting;
+
+    if (hours >= 5 && hours < 12) {
+      greeting = "Good Morning";
+    } else if (hours >= 12 && hours < 16) {
+      greeting = "Good Afternoon";
+    } else if (hours >= 16 && hours < 20) {
+      greeting = "Good Evening";
+    } else {
+      greeting = "Good Night";
+    }
+
+    // Display the greeting
+    document.getElementById("greeting").textContent = greeting;
+
+    // Handle the name form submission
+    const nameForm = document.getElementById("nameForm");
+    nameForm.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent the form from refreshing the page
+      const name = document.getElementById("name").value; // Get the entered name
+      document.getElementById(
+        "welcomeMessage"
+      ).textContent = `${greeting}, ${name}!`;
+      nameForm.style.display = "none"; // Hide the form after submission
+    });
+
+    // Notify the server when the browser tab is closed
+    window.addEventListener("beforeunload", () => {
+      fetch("/shutdown", { method: "POST" }); // Send a POST request to shut down the server
+    });
+  </script>
+</body>
+</html>
